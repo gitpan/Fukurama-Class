@@ -1,0 +1,10 @@
+Revision history for Fukurama-Class
+
+0.01    2007-06-03
+        initial release
+
+0.02	2007-12-21
+		bugfix: no "final" method-check if force_inheritation is not set
+		bugfix: Too late to run CHECK/INIT warnings for mod_perl removed
+		bugfix: Fukurama::Class(abstract) parameter repaired, if it was defined even with '0' the class was used as abstract
+		bugfix: deep-recursion warning in Fukurama.:Class::Tree removed
