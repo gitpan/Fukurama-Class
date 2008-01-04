@@ -8,3 +8,7 @@ Revision history for Fukurama-Class
 		bugfix: Too late to run CHECK/INIT warnings for mod_perl removed
 		bugfix: Fukurama::Class(abstract) parameter repaired, if it was defined even with '0' the class was used as abstract
 		bugfix: deep-recursion warning in Fukurama.:Class::Tree removed
+
+0.021	2008-01-04
+		bugfix: tests Rigid, Tree, Class and Implements adapted for curiosities in perl 5.10
+		bugfix: GLOB-reference-test adapted for curiosities in perl 5.10

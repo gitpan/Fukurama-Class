@@ -71,7 +71,7 @@ like($warnings, qr/sub 'test' is defined twice/, 'multi-inheritation warnings');
 	is($fp->{one}, 1, 'first field');
 	is($fp->{two}, 2, 'second field');
 	eval("\$fp->{three}");
-	like($@, qr/No such pseudo-hash field "three"/, 'disallowed third field');
+	like($@, qr/No such [A-Za-z\-]*? field "three"/, 'disallowed third field');
 	
 	my FieldsChild $fc = FieldsChild->new();
 	is($fc->{one}, 1, 'first field');

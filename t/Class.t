@@ -25,7 +25,7 @@ eval("use Fukurama::Class( extends => '' )");
 is($@, '', 'can have no parent');
 eval("use Fukurama::Class( implements => [] )");
 is($@, '', 'can have no interface');
-eval("use Fukurama::Class( implements => [MyInterface, MySecondItf] )");
+eval("use Fukurama::Class( implements => ['MyInterface', 'MySecondItf'] )");
 like($@, qr/value.*MyInterface.*MySecondItf.*implements.*not allowed/i, 'croak at wrong interface');
 
 {

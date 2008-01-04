@@ -253,7 +253,7 @@ sub get_all_subs {
 	
 	my $subs = {};
 	foreach my $glob (%{$used_class . '::'}) {
-		next if(!*$glob{'CODE'});
+		next if((ref($glob) && ref($glob) ne 'GLOB') || !*$glob{'CODE'});
 		$subs->{*$glob{'NAME'}} = undef;
 	}
 	return keys(%$subs);

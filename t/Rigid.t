@@ -1,5 +1,5 @@
 #!perl -T
-use Test::More tests => 8;
+use Test::More tests => 6;
 use lib qw(./ ./t);
 use strict;
 use warnings;
@@ -26,15 +26,5 @@ eval("
 ");
 is($@, '', 'dont check packagename in eval');
 
-{
-	local $Fukurama::Class::Rigid::PACKAGE_NAME_CHECK = 0;
-	eval("use Rigid::WrongPackage");
-	is($@, '', 'packagename check can be disabled');
-};
-
 my @warnings = split(/\n/, $warnings);
 is(scalar(@warnings), 1, 'no other warnings');
-
-local $Fukurama::Class::Rigid::PACKAGE_NAME_CHECK = 0;
-eval("use Rigid::WrongPackage");
-is($@, '', 'disable package name check');
