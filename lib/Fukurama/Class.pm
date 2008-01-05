@@ -4,7 +4,7 @@ use Fukurama::Class::Carp;
 use Fukurama::Class::Version();
 our $VERSION;
 BEGIN {
-	$VERSION = 0.021;
+	$VERSION = 0.022;
 	Fukurama::Class::Version->import($VERSION);
 }
 use Fukurama::Class::Extends();
