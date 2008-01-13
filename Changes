@@ -15,4 +15,8 @@ Revision history for Fukurama-Class
 
 0.0.22	2008-01-05
 		bugfix: lax int-overflow test for os with other int-sizes
- 
+
+0.023	2008-01-13	
+		bugfix: increase distance for version test to avoiding float-truncation
+		bugfix: decrease float-overflow test distance to avoid overflow in test itself
+		bugfix: increase distance for decimal-overflow test to force overflow in test

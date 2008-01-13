@@ -126,16 +126,16 @@ test_type('float', 1, undef, 'int', 0, 1);
 test_type('float', 1, undef, 'decimal', 0, 1.1);
 test_type('float', 1, undef, 'float', 0, 1.1e15);
 test_type('float', 1, undef, 'float as string', 0, '1.1111111111e99');
-test_type('float', 0, 'overflow', 'overflow', 0, "1.1e9999999999");
+test_type('float', 0, 'overflow', 'overflow', 0, "1.1e9999");
 test_type('float', 0, 'NaN', 'not a number', 0, '1..1111111111e99999');
 test_type('float', 0, undef, 'undef', 0, undef);
 
 test_type('decimal', 1, undef, 'int', 0, 78);
 test_type('decimal', 1, undef, 'decimal', 0, 1.1);
 test_type('decimal', 1, undef, 'negative decimal', 0, -51.1);
-test_type('decimal', 0, qr/(?:noDec|overflow)/, 'float', 0, 1.1e15);
+test_type('decimal', 0, qr/(?:noDec|overflow)/, 'float', 0, 1.1e99);
 test_type('decimal', 0, 'NaN', 'string', 0, '1a1');
-test_type('decimal', 0, 'overflow', 'overflow', 0, "1.1e9999999999");
+test_type('decimal', 0, 'overflow', 'overflow', 0, "1.1e9999");
 test_type('decimal', 0, 'NaN', 'not a number', 0, '1..1111111111e99999');
 test_type('decimal', 0, undef, 'undef', 0, undef);
 
