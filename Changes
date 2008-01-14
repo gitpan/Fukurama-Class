@@ -20,3 +20,7 @@ Revision history for Fukurama-Class
 		bugfix: increase distance for version test to avoiding float-truncation
 		bugfix: decrease float-overflow test distance to avoid overflow in test itself
 		bugfix: increase distance for decimal-overflow test to force overflow in test
+
+0.024	2008.01.15
+		bugfix: extend overflow-tests to find overfloating for actual system
+		bugfix: fix package-string for version tests

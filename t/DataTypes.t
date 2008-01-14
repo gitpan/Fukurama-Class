@@ -1,5 +1,5 @@
 #!perl -T
-use Test::More tests => 326;
+use Test::More tests => 329;
 use strict;
 use warnings;
 
@@ -86,9 +86,37 @@ test_type('MyOwnClass', 0, 'wrongObject', 'wrong instance', 1, MyWrongClass->new
 test_type('int', 1, undef, 'normal', 0, 11934);
 test_type('int', 1, undef, 'negative', 0, -11934);
 test_type('int', 0, 'noInt', 'decimal', 0, 1.1);
-test_type('int', 0, 'noInt', 'float', 0, 11111111111111111111111111111111111111111111111111111111111111111111111111111);
-test_type('int', 0, 'overflow', 'float as string', 0, '11111111111111111111111111111111111111111111111111111111111111111111111111111');
-test_type('int', 0, 'overflow', 'overflowed', 0, ('1' x 99999));
+
+my $overflowing_int = 0;
+my $overfloating_int_string = '';
+my $i = 1;
+while($i++) {
+	$overfloating_int_string = '1' x $i;
+	$overflowing_int = $overfloating_int_string + 1;
+	if($overflowing_int =~ /e\+/) {
+		ok(1, 'found integer overflow');
+		last;
+	}
+	last if($i > 1_000_000_000);
+}
+
+my $overfloating_float = 0;
+my $overfloating_float_string = '';
+$i = 98;
+while($i++) {
+	$overfloating_float = '1.1e+' . $i;
+	if(($overfloating_float + 1) ne $overfloating_float) {
+		$overfloating_float_string = '9' x $i;
+		is($overfloating_float + 1, 'inf', 'found floatingpoint overflow');
+		is($overfloating_float_string + 1, 'inf', 'found floatingpoint overflow string'); 
+		last; 
+	}
+	last if($i > 1_000_000_000);
+}
+
+test_type('int', 0, 'noInt', 'float', 0, $overflowing_int);
+test_type('int', 0, 'overflow', 'float as string', 0, $overfloating_int_string);
+test_type('int', 0, 'overflow', 'overflowed', 0, $overfloating_float_string);
 test_type('int', 0, 'noInt', 'string', 0, 'a1');
 
 test_type('void', 1, undef, 'normal', 0, undef);
@@ -126,16 +154,17 @@ test_type('float', 1, undef, 'int', 0, 1);
 test_type('float', 1, undef, 'decimal', 0, 1.1);
 test_type('float', 1, undef, 'float', 0, 1.1e15);
 test_type('float', 1, undef, 'float as string', 0, '1.1111111111e99');
-test_type('float', 0, 'overflow', 'overflow', 0, "1.1e9999");
+
+test_type('float', 0, 'overflow', 'overflow', 0, $overfloating_float);
 test_type('float', 0, 'NaN', 'not a number', 0, '1..1111111111e99999');
 test_type('float', 0, undef, 'undef', 0, undef);
 
 test_type('decimal', 1, undef, 'int', 0, 78);
 test_type('decimal', 1, undef, 'decimal', 0, 1.1);
 test_type('decimal', 1, undef, 'negative decimal', 0, -51.1);
-test_type('decimal', 0, qr/(?:noDec|overflow)/, 'float', 0, 1.1e99);
+test_type('decimal', 0, qr/(?:noDec|overflow)/, 'float', 0, $overfloating_float);
 test_type('decimal', 0, 'NaN', 'string', 0, '1a1');
-test_type('decimal', 0, 'overflow', 'overflow', 0, "1.1e9999");
+test_type('decimal', 0, 'overflow', 'overflow', 0, $overfloating_float);
 test_type('decimal', 0, 'NaN', 'not a number', 0, '1..1111111111e99999');
 test_type('decimal', 0, undef, 'undef', 0, undef);
 

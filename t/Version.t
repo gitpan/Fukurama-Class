@@ -30,7 +30,7 @@ use warnings;
 	main::is($@, '', 'correct version');
 	main::is($MyClass::VERSION, 1, 'version is set');
 	
-	eval("Fukurama::Class::Version->version(__PACKAGE__, '1.8')");
+	eval("Fukurama::Class::Version->version('" . __PACKAGE__ . "', '1.8')");
 	main::is($@, '', 'correct version');
 	main::is($MyClass::VERSION, 1.8, 'version is set');
 }
