@@ -139,7 +139,10 @@ see perldoc of L<Fukurama::Class>
 
 =cut
 
-
+# param: value:SCALAR
+my $HAS_OVERFLOW = sub {
+	($_[0] * 1) =~ m/^[Ii]nf(?:inity|)$/;
+};
 # param: value:SCALAR, type:STRING
 my $TYPES = {
 	void	=> sub {
@@ -178,7 +181,7 @@ my $TYPES = {
 		return 1 if(defined($_[0]) && $_[0] =~ m/^\-?[0-9]+$/ && ($_[0] * 1) eq $_[0]);
 		return (0, $_[0]) if(!defined($_[0]));
 		return (0, $_[0], 'noInt') if($_[0] !~ m/^\-?[0-9]+$/);
-		return (0, $_[0] * 1, 'overflow') if(($_[0] * 1) eq 'inf' || ($_[0] * 1) ne $_[0]);
+		return (0, $_[0] * 1, 'overflow') if(&$HAS_OVERFLOW($_[0]) || ($_[0] * 1) ne $_[0]);
 		(0, $_[0] * 1);
 	},
 	float		=> sub {
@@ -186,18 +189,18 @@ my $TYPES = {
 			defined($_[0])
 			&& ( $_[0] =~ m/^[0-9]+\.?[0-9]*$/ || $_[0] =~ m/^[0-9]+\.?[0-9]*e\+?[0-9]+/)
 			&& ($_[0] * 1) == $_[0]
-			&& ($_[0] * 1) ne 'inf'
+			&& !&$HAS_OVERFLOW($_[0])
 		);
 		return (0, $_[0]) if(!defined($_[0]));
 		return (0, $_[0], 'NaN') if($_[0] !~ m/^[0-9]+\.?[0-9]*$/ && $_[0] !~ m/^[0-9]+\.?[0-9]*e\+?[0-9]+$/);
-		return (0, $_[0] * 1, 'overflow') if(($_[0] * 1) eq 'inf' || ($_[0] * 1) != $_[0]);
+		return (0, $_[0] * 1, 'overflow') if(&$HAS_OVERFLOW($_[0]) || ($_[0] * 1) != $_[0]);
 		(0, $_[0]);
 	},
 	decimal		=> sub {
 		return 1 if(defined($_[0]) && $_[0] =~ m/^\-?[0-9]+\.?[0-9]*$/ && ($_[0] * 1) eq $_[0]);
 		return (0, $_[0]) if(!defined($_[0]));
 		return (0, $_[0], 'NaN') if($_[0] !~ m/^[0-9]+\.?[0-9]*$/ && $_[0] !~ m/^[0-9]+\.?[0-9]*e\+?[0-9]+$/);
-		return (0, $_[0] * 1, 'overflow') if(($_[0] * 1) eq 'inf' || ($_[0] * 1) ne $_[0]);
+		return (0, $_[0] * 1, 'overflow') if(&$HAS_OVERFLOW($_[0]) || ($_[0] * 1) ne $_[0]);
 		return (0, $_[0], 'noDec') if($_[0] !~ m/^\-?[0-9]+\.?[0-9]*$/);
 		(0, $_[0] * 1);
 	},

@@ -92,27 +92,25 @@ my $overfloating_int_string = '';
 my $i = 1;
 while($i++) {
 	$overfloating_int_string = '1' x $i;
-	$overflowing_int = $overfloating_int_string + 1;
-	if($overflowing_int =~ /e\+/) {
-		ok(1, 'found integer overflow');
-		last;
-	}
+	$overflowing_int = $overfloating_int_string * 1;
+	last if($overflowing_int =~ /e\+/);
 	last if($i > 1_000_000_000);
 }
+is($overflowing_int =~ /e\+/, 1, 'found integer overflow');
 
 my $overfloating_float = 0;
 my $overfloating_float_string = '';
 $i = 98;
 while($i++) {
 	$overfloating_float = '1.1e+' . $i;
-	if(($overfloating_float + 1) ne $overfloating_float) {
+	if(($overfloating_float * 1) ne $overfloating_float) {
 		$overfloating_float_string = '9' x $i;
-		is($overfloating_float + 1, 'inf', 'found floatingpoint overflow');
-		is($overfloating_float_string + 1, 'inf', 'found floatingpoint overflow string'); 
 		last; 
 	}
 	last if($i > 1_000_000_000);
 }
+like($overfloating_float * 1, qr/^[Ii]nf(?:inity|)$/, 'found floatingpoint overflow');
+like($overfloating_float_string * 1, qr/^[Ii]nf(?:inity|)$/, 'found floatingpoint overflow string'); 
 
 test_type('int', 0, 'noInt', 'float', 0, $overflowing_int);
 test_type('int', 0, 'overflow', 'float as string', 0, $overfloating_int_string);
