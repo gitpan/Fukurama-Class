@@ -34,3 +34,6 @@ Revision history for Fukurama-Class
 
 0.027	2008-03-12
 		search for overflow-sign extendet
+
+0.028	2008-03-12
+		bugfix: POD for implements-syntax changed

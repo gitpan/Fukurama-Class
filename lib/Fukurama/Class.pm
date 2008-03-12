@@ -5,7 +5,7 @@ use Fukurama::Class::Carp;
 use Fukurama::Class::Version();
 our $VERSION;
 BEGIN {
-	$VERSION = 0.027;
+	$VERSION = 0.028;
 	Fukurama::Class::Version->import($VERSION);
 }
 use Fukurama::Class::Extends();
@@ -171,7 +171,7 @@ Version 0.01 (alpha)
  package MyClass;
  use Fukurama::Class(
  	extends		=> 'MyParent::Class',
- 	implements	=> qw/MyFirst::Interface MySecond::Interface/,
+ 	implements	=> ['MyFirst::Interface', 'MySecond::Interface'],
  	abstract	=> 1,
  	version		=> 1.7,
  );

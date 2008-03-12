@@ -1,6 +1,6 @@
 --- #YAML:1.0
 name:                Fukurama-Class
-version:             0.027
+version:             0.028
 abstract:            Pragma to extend the Perl-OO (in native Perl)
 license:             ~
 author:              
