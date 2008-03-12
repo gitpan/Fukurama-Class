@@ -1,10 +1,11 @@
 package Fukurama::Class;
+use 5.008;
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 use Fukurama::Class::Version();
 our $VERSION;
 BEGIN {
-	$VERSION = 0.025;
+	$VERSION = 0.027;
 	Fukurama::Class::Version->import($VERSION);
 }
 use Fukurama::Class::Extends();

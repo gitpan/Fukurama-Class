@@ -1,5 +1,5 @@
 package Fukurama::Class::DataTypes;
-use Fukurama::Class::Version(0.01);
+use Fukurama::Class::Version(0.02);
 use Fukurama::Class::Rigid;
 
 =head1 NAME
@@ -139,9 +139,18 @@ see perldoc of L<Fukurama::Class>
 
 =cut
 
-# param: value:SCALAR
+my $OVERFLOW_SIGN;
+BEGIN {
+	my $i = 0;
+	my $float;
+	while(++$i) {
+		$float = '1.1e+' . ($i * 100);
+		$OVERFLOW_SIGN = $float * 1;
+		last if($OVERFLOW_SIGN ne $float || $i > 1_000);
+	}
+}
 my $HAS_OVERFLOW = sub {
-	($_[0] * 1) =~ m/^[Ii]nf(?:inity|)$/;
+	($_[0] * 1) eq $OVERFLOW_SIGN;
 };
 # param: value:SCALAR, type:STRING
 my $TYPES = {
