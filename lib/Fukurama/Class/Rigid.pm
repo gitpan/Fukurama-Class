@@ -1,10 +1,11 @@
 package Fukurama::Class::Rigid;
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 use strict;
 use warnings;
 use Fukurama::Class::Carp;
 
 our $PACKAGE_NAME_CHECK = 1;
+our $DISABLE = 0;
 
 =head1 NAME
 
@@ -30,7 +31,13 @@ You can disable the class- and filename check by setting. You have to do this at
 B<use Fukurama::Class::Rigid;> is executed.
 
  $Fukurama::Class::Rigid::PACKAGE_NAHE_CHECK = 0;
- 
+
+You even can disable warnings by saying:
+
+ $Fukurama::Class::Rigid::DISABLE = 1;
+
+to speed up your code (Warnings are even executed at runtime).
+
 =head1 EXPORT
 
 nothing, bit the behavior of the strict and warnings pragmas.
@@ -70,7 +77,7 @@ sub rigid {
 	my $import_depth = $_[1] || 0;
 	
 	strict::import();
-	warnings::import();
+	warnings::import() if(!$DISABLE);
 	if($PACKAGE_NAME_CHECK) {
 		my $caller = [caller($import_depth)];
 		if($caller->[0] ne 'main' && $caller->[0] ne '__ANON__' && $caller->[1] !~ m/^\(eval.+\)$/) {

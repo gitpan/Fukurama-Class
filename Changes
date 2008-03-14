@@ -37,3 +37,7 @@ Revision history for Fukurama-Class
 
 0.028	2008-03-12
 		bugfix: POD for implements-syntax changed
+
+0.029	2008-03-14
+		bugfix: change the method to find the overflow-sign for M$-Systems
+		create interface to disable the warnings-pragma when disabling the whole Fukurama::Class

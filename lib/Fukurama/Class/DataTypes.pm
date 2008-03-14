@@ -1,5 +1,5 @@
 package Fukurama::Class::DataTypes;
-use Fukurama::Class::Version(0.02);
+use Fukurama::Class::Version(0.03);
 use Fukurama::Class::Rigid;
 
 =head1 NAME
@@ -144,9 +144,16 @@ BEGIN {
 	my $i = 0;
 	my $float;
 	while(++$i) {
-		$float = '1.1e+' . ($i * 100);
-		$OVERFLOW_SIGN = $float * 1;
-		last if($OVERFLOW_SIGN ne $float || $i > 1_000);
+		$float = '1.2e+' . ($i * 100);
+		my $result = ($float * 1) - $float;
+		if($result ne '0') {
+			$OVERFLOW_SIGN = $float * 1;
+			last;
+		}
+		if($i > 1_000) {
+			$OVERFLOW_SIGN = 'inf';
+			last;
+		}
 	}
 }
 my $HAS_OVERFLOW = sub {

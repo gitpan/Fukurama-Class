@@ -5,7 +5,7 @@ use Fukurama::Class::Carp;
 use Fukurama::Class::Version();
 our $VERSION;
 BEGIN {
-	$VERSION = 0.028;
+	$VERSION = 0.029;
 	Fukurama::Class::Version->import($VERSION);
 }
 use Fukurama::Class::Extends();
@@ -67,6 +67,7 @@ sub unimport {
 		$Fukurama::Class::Attributes::CHECK_LEVEL = $Fukurama::Class::Attributes::LEVEL_CHECK_NONE;
 		$Fukurama::Class::Attributes::OOStandard::CHECK_LEVEL = $Fukurama::Class::Attributes::OOStandard::LEVEL_CHECK_NONE;
 		$Fukurama::Class::HideCaller::DISABLE = 1;
+		$Fukurama::Class::Rigid::DISABLE = 1;
 	}
 	return;
 }
@@ -594,9 +595,9 @@ This will disable all checks for runtime as above and for compiletime as to chec
 of abstract methods and interfaces, use same or extended signatures for overwritten subs and the package-name checks.
 
 If you say this, only decorations for the methods B<UNIVERSAL::isa( )> and B<MODIFY_CODE_ATTRIBUTE( )>
-(which will be in several classes) would stay.
+(which will be in several classes) would stay. Even B<warning> are disabled, because of the runtime-warning checks.
 
-But the B<strict> and the B<warning> would never be disabled.
+But the B<strict> would never be disabled.
 
 =back
 
