@@ -1,5 +1,5 @@
 package Fukurama::Class::Tree;
-use Fukurama::Class::Version(0.01);
+use Fukurama::Class::Version(0.02);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 
@@ -9,7 +9,7 @@ my $IS_BUILD = 0;
 my $EXEC_ONCE = {};
 my $CLASSTREE = {};
 
-my $FORBID_SUB_TYPES = ['system', 'tie'];
+my $FORBID_SUB_TYPES = ['system', 'tie', 'thread'];
 my $FORBIDDEN_SUBS = {
 	system	=> {
 		import						=> 1,
@@ -18,6 +18,7 @@ my $FORBIDDEN_SUBS = {
 		isa							=> 1,
 		VERSION						=> 1,
 		BEGIN						=> 1,
+		UNITCHECK					=> 1,
 		CHECK						=> 1,
 		INIT						=> 1,
 		END							=> 1,
@@ -33,6 +34,10 @@ my $FORBIDDEN_SUBS = {
 		FETCH_ARRAY_ATTRIBUTES		=> 1,
 		FETCH_HASH_ATTRIBUTES		=> 1,
 		FETCH_GLOB_ATTRIBUTES		=> 1,
+	},
+	thread	=> {
+		CLONE		=> 1,
+		CLONE_SKIP	=> 1,
 	},
 	tie	=> {
 		TIESCALAR	=> 1,

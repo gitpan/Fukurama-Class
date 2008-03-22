@@ -93,7 +93,7 @@ while($i++) {
 	last if($i > 1_000_000_000);
 }
 is($overflowing_int =~ /[^1]/, 1, 'found integer overflow');
-diag("\nString-overflow at: $overflowing_int");
+diag("\nInteger-overflow at: $overflowing_int");
 
 my $overfloating_float = 0;
 my $overfloating_float_string = '';
@@ -103,13 +103,15 @@ while($i++) {
 	my $result = ($overfloating_float * 1) - $overfloating_float;
 	if($result ne '0') {
 		diag("Overflow substraction result: $result, Overflow: " . ($overfloating_float * 1));
-		$overfloating_float_string = '9' x $i;
+		$overfloating_float_string = '12' . ('0' x ($i - 1));
+		diag("Overflowinf float: $overfloating_float");
+		diag("Overflowinf float base length: " . length($overfloating_float_string));
 		last; 
 	}
 	last if($i > 1_000_000_000);
 }
 unlike($overfloating_float * 1, qr/1.2/, 'found floatingpoint overflow');
-unlike($overfloating_float_string * 1, qr/9/, 'found floatingpoint overflow string'); 
+unlike($overfloating_float_string * 1, qr/1\.?2/, 'found floatingpoint overflow string'); 
 
 test_type('int', 0, 'noInt', 'float', 0, $overflowing_int);
 test_type('int', 0, 'overflow', 'float as string', 0, $overfloating_int_string);

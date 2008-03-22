@@ -1,7 +1,7 @@
 Revision history for Fukurama-Class
 
-0.01    2007-06-03
-        initial release
+0.01	2007-06-03
+		initial release
 
 0.02	2007-12-21
 		bugfix: no "final" method-check if force_inheritation is not set
@@ -41,3 +41,7 @@ Revision history for Fukurama-Class
 0.029	2008-03-14
 		bugfix: change the method to find the overflow-sign for M$-Systems
 		create interface to disable the warnings-pragma when disabling the whole Fukurama::Class
+
+0.030	2008-03-19
+		complete the list of perls system internal subs for threads and new system-subs for perl 5.10
+		fix incorrect creation of float-overflow-base-string in DataType test for some 64bit systems
