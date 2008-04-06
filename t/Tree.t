@@ -1,5 +1,5 @@
 #!perl -T
-use Test::More tests => 10;
+use Test::More tests => 11;
 use strict;
 use warnings;
 
@@ -50,6 +50,28 @@ BEGIN {
 	use base 'MyE';
 	use base 'MyD';
 	use base 'MyC';
+	
+	BEGIN {
+		my $old = $SIG{__WARN__};
+		$SIG{__WARN__} = sub {
+			if($_[0] =~ /^Deep recursion on subroutine "Fukurama::Class::Tree::_read_class"/) {
+				main::fail('Endless recursion in Tree.pm by searching for all classes');
+				exit();
+			}
+			goto &$old if(ref($old) eq 'CODE');
+			return;
+		};
+	}
+	eval {
+		
+		#local $SIG{'
+		
+		no warnings 'once';
+		no warnings 'uninitialized';
+		
+		__PACKAGE__->$NOTEXISTING_CLASS::notexisting_sub;
+	};
+	main::like($@, qr/object method ""/, 'access to notexisting sub');
 }
 
 my $paths = $t->get_inheritation_path('MyF');

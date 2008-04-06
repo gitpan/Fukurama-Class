@@ -1,4 +1,5 @@
 package Fukurama::Class::Attributes;
+use Fukurama::Class::Version(0.01);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 
@@ -33,7 +34,7 @@ Fukurama::Class::Attributes - Pragma like module to extend code attributes
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.01 (beta)
 
 =head1 SYNOPSIS
 

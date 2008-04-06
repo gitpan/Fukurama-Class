@@ -1,5 +1,5 @@
 package Fukurama::Class::Version;
-our $VERSION = 0.01;
+our $VERSION = 0.02;
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 
@@ -9,7 +9,7 @@ Fukurama::Class::Version - Pragma to set package-version
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.02 (beta)
 
 =head1 SYNOPSIS
 
@@ -63,7 +63,7 @@ sub version {
 	
 	if(!defined($version)) {
 		_croak("Try to set undefined version to class '$caller_class'", $import_depth);
-	} elsif($version !~ /^[0-9]+.?[0-9]*$/) {
+	} elsif($version !~ /^[0-9]+(?:[\._]?[0-9]+)*$/) {
 		_croak("Try to set non-decimal version '$version' to class '$caller_class'", $import_depth);
 	}
 	

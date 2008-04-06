@@ -13,7 +13,7 @@ Fukurama::Class::Rigid - Pragma to set strict and warnings pragma and check clas
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.02 (beta)
 
 =head1 SYNOPSIS
 

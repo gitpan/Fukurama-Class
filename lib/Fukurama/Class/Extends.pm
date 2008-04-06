@@ -21,7 +21,7 @@ Fukurama::Class::Extends - Pragma to extend class inheritation
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.01 (beta)
 
 =head1 SYNOPSIS
 

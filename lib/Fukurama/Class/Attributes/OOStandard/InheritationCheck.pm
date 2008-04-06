@@ -1,4 +1,5 @@
 package Fukurama::Class::Attributes::OOStandard::InheritationCheck;
+use Fukurama::Class::Version(0.02);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 use Fukurama::Class::Tree();
@@ -14,7 +15,7 @@ Fukurama::Class::Attributes::OOStandard::InheritationCheck - Helper-class to che
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.02 (beta)
 
 =head1 SYNOPSIS
 
@@ -178,9 +179,8 @@ sub _compare_definitions {
 	if($parent->{'static'} ne $child->{'static'}) {
 		$class->_throw_compare_error("Child and parent have to be the same access type (" . ($parent->{'static'} ? 'static' : 'non static') . ")", $parent, $child);
 	}
-	
-	if($definition_data->{'access_level'}->{$child->{'access_level'}} > $definition_data->{'access_level'}->{$parent->{'access_level'}}) {
-		$class->_throw_compare_error("The child-access-level ($child->{'access_level'}) can't be lazier as the parent-access-level ($parent->{'access_level'})", $parent, $child);
+	if($definition_data->{'access_level'}->{$child->{'access_level'}} != $definition_data->{'access_level'}->{$parent->{'access_level'}}) {
+		$class->_throw_compare_error("The child-access-level ($child->{'access_level'}) can't be another as the parent-access-level ($parent->{'access_level'})", $parent, $child);
 	}
 	
 	my $io_errors = $class->_compare_list($parent, $child, 'para', 'parameter', 0);

@@ -1,4 +1,5 @@
 package Fukurama::Class::Attributes::OOStandard::DefinitionCheck;
+use Fukurama::Class::Version(0.02);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 use Fukurama::Class::DataTypes();
@@ -22,10 +23,10 @@ my $ACCESS_LEVEL = {
 	protected	=> 2,
 	private		=> 3,
 };
-my $ACCESS_LEVEL_TYPE = {
+my $ACCESS_LEVEL_TYPE = {# ENUM('', 'unoverwritable')
 	public		=> '',
 	protected	=> '',
-	private		=> 'unoverwritable',
+	private		=> '',
 };
 my $STATIC = {
 	static		=> 1,
@@ -43,7 +44,7 @@ Fukurama::Class::Attributes::OOStandard::DefinitionCheck - Helper-class to check
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.02 (beta)
 
 =head1 SYNOPSIS
 
@@ -552,7 +553,7 @@ sub try_check_access {
 	my ($caller_package, $filename, $line) = caller();
 	my $msg = '';
 	if($def->{'access_level'} eq 'protected') {
-		return if(UNIVERSAL::isa($caller_package, $def->{'sub_data'}->{'class'}));
+		return if(UNIVERSAL::isa($caller_package, $def->{'sub_data'}->{'class'}) || UNIVERSAL::isa($def->{'sub_data'}->{'class'}, $caller_package));
 		$msg = 'protected but called from outside the inheritation';
 	} elsif($def->{'access_level'} eq 'private') {
 		return if($caller_package eq $def->{'sub_data'}->{'class'});

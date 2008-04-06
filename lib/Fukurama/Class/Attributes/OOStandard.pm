@@ -1,4 +1,5 @@
 package Fukurama::Class::Attributes::OOStandard;
+use Fukurama::Class::Version(0.01);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp();
 use Fukurama::Class::Attributes::OOStandard::DefinitionCheck();
@@ -25,7 +26,7 @@ Fukurama::Class::Attribute::OOStandard - Plugin for code attributes
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.01 (beta)
 
 =head1 SYNOPSIS
 

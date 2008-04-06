@@ -14,7 +14,7 @@ Fukurama::Class::HideCaller - Pragma to hide wrapper-classes in callers stack
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.01 (beta)
 
 =head1 SYNOPSIS
 

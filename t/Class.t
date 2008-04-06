@@ -1,5 +1,5 @@
 #!perl -T
-use Test::More tests => 21;
+use Test::More tests => 24;
 use strict;
 use warnings;
 
@@ -86,3 +86,63 @@ like($@, qr/Abstract class/, 'calling abstract class');
 	use base 'MyFullUsage';
 	sub new : Method(|int|) {}
 }
+
+{
+	package MyDefCheckParent;
+	use Fukurama::Class(extends => '');
+	
+	sub new : Constructor(public|) {
+		my $self =  bless({}, $_[0]);
+		eval {
+			$self->_test();
+		};
+		main::is($@, '', 'protected method can be called from parent');
+		return $self;
+	}
+	sub _test : Method(protected|void|) {}
+}
+{
+	package MyDefCheckChild;
+	use Fukurama::Class(extends => 'MyDefCheckParent');
+	
+	sub _test : Method(protected|void|) {}
+	
+	__PACKAGE__->new()
+}
+{
+	package MyChangeAccessLevelParent;
+	use Fukurama::Class(extends => '');
+	
+	sub _prot : Method(protected|void|) {}
+	sub _priv : Method(private|void|) {}
+}
+{
+	package MyChangeAccessLevelChildPriv;
+	use Fukurama::Class;
+	
+	sub _prot : Method(private|void|) {}
+	eval("use Fukurama::Class( extends => 'MyChangeAccessLevelParent' );Fukurama::Class->run_check();");
+	{
+		
+		no strict 'refs';
+		
+		%{*{__PACKAGE__ . '::'}} = ();
+	}
+	main::like($@, qr/can't be another/, 'cant change from protected to private');
+}
+{
+	package MyChangeAccessLevelChildProt;
+	use Fukurama::Class;
+	
+	sub _priv : Method(protected|void|) {}
+	eval("use Fukurama::Class( extends => 'MyChangeAccessLevelParent' );Fukurama::Class->run_check();");
+	{
+		
+		no strict 'refs';
+		
+		%{*{__PACKAGE__ . '::'}} = ();
+	}
+	main::like($@, qr/can't be another/, 'cant change from private to protected');
+}
+
+

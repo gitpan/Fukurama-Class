@@ -1,5 +1,5 @@
 #!perl -T
-use Test::More tests => 12;
+use Test::More tests => 14;
 use strict;
 use warnings;
 
@@ -14,9 +14,15 @@ use warnings;
 	}
 	$MyClass::VERSION = undef;
 	
+	eval("use Fukurama::Class::Version('0.0_1')");
+	main::is($@, '', 'no old extendet version error');
+	main::is($MyClass::VERSION, '0.0_1', 'old extendet version is ok');
+	$MyClass::VERSION = undef;
+	
 	eval("use Fukurama::Class::Version('0.0.1')");
-	main::like($@, qr/non-decimal/, 'numer-error');
-	main::is($MyClass::VERSION, undef, 'version is undef');
+	main::is($@, '', 'no extendet version error');
+	main::is($MyClass::VERSION, '0.0.1', 'extendet version is ok');
+	$MyClass::VERSION = undef;
 	
 	eval("use Fukurama::Class::Version('0.01.')");
 	main::like($@, qr/non-decimal/, 'numer-error');

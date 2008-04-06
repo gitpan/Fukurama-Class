@@ -1,4 +1,5 @@
 package Fukurama::Class::Attributes::OOStandard::Decorator;
+use Fukurama::Class::Version(0.01);
 use Fukurama::Class::Rigid;
 
 use Fukurama::Class::HideCaller;
@@ -10,7 +11,7 @@ Fukurama::Class::Attributes::OOStandard::Decorator - Helper-class to decorate su
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.01 (beta)
 
 =head1 SYNOPSIS
 

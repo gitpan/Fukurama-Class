@@ -14,7 +14,7 @@ Fukurama::Class::Abstract - Pragma to provide abstract classes
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.01 (beta)
 
 =head1 SYNOPSIS
 

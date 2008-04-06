@@ -8,7 +8,7 @@ Fukurama::Class::DataTypes - Helper class to register and check datatypes
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.03 (beta)
 
 =head1 SYNOPSIS
 

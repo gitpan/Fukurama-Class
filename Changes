@@ -45,3 +45,10 @@ Revision history for Fukurama-Class
 0.030	2008-03-19
 		complete the list of perls system internal subs for threads and new system-subs for perl 5.10
 		fix incorrect creation of float-overflow-base-string in DataType test for some 64bit systems
+
+0.031	2008-04-06
+		extendet versions allowed (eg 1.0.1.12)
+		bugfix: endless recursion in compiletime-check removed
+		bugfix: parents can call protected methods from a child
+		change: now you cant tighten or loosen the access-level for a method in the inheritation tree (private, protected, public)
+		change all status to beta

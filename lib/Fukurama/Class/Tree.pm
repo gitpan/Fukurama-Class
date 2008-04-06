@@ -1,5 +1,5 @@
 package Fukurama::Class::Tree;
-use Fukurama::Class::Version(0.02);
+use Fukurama::Class::Version(0.03);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 
@@ -76,7 +76,7 @@ Fukurama::Class::Tree - Helper-class to register class-handler
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.03 (beta)
 
 =head1 SYNOPSIS
 
@@ -221,6 +221,7 @@ sub _read_class {
 		$classname =~ s/^(?:::)(?:main|)//;
 		$classname =~ s/::$//;
 		next if(!UNIVERSAL::isa($classname, $classname) || $classname =~ m/[^a-zA-Z0-9_:]/);
+		next if($classtree->{$classname});
 		
 		$classtree->{$classname} = {};
 		foreach my $build_handler (values(%$BUILD)) {

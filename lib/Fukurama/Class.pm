@@ -5,7 +5,7 @@ use Fukurama::Class::Carp;
 use Fukurama::Class::Version();
 our $VERSION;
 BEGIN {
-	$VERSION = 0.030;
+	$VERSION = 0.031;
 	Fukurama::Class::Version->import($VERSION);
 }
 use Fukurama::Class::Extends();
@@ -165,7 +165,7 @@ Fukurama::Class - Pragma to extend the Perl-OO (in native Perl)
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.031 (beta)
 
 =head1 SYNOPSIS
 
@@ -544,8 +544,8 @@ You can extend signatures by the following ways:
 
 =item limit the access-level
 
-You can limit the access to the subs from B<public> to B<protected> to B<private>. A private sub
-can't be extended to protected or public (like in java).
+You can't change the access-level to the subs (B<public>, B<protected>, B<private>) in your inheritation tree.
+Because public methods start with no underscore and all other with an underscore.
 
 =item set final
 

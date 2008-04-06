@@ -1,4 +1,5 @@
 package Fukurama::Class::AttributesHandler;
+use Fukurama::Class::Version(0.01);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 
@@ -21,7 +22,7 @@ Fukurama::Class::AttributesHandler - Helper class to provide corrrect handling o
 
 =head1 VERSION
 
-Version 0.01 (alpha)
+Version 0.01 (beta)
 
 =head1 SYNOPSIS
 
