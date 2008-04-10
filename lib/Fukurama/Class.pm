@@ -5,7 +5,7 @@ use Fukurama::Class::Carp;
 use Fukurama::Class::Version();
 our $VERSION;
 BEGIN {
-	$VERSION = 0.031;
+	$VERSION = 0.032;
 	Fukurama::Class::Version->import($VERSION);
 }
 use Fukurama::Class::Extends();
@@ -165,7 +165,7 @@ Fukurama::Class - Pragma to extend the Perl-OO (in native Perl)
 
 =head1 VERSION
 
-Version 0.031 (beta)
+Version 0.032 (beta)
 
 =head1 SYNOPSIS
 
@@ -299,10 +299,9 @@ at B<compiletime>.
 
  sub new : Constructor(ACCESS_LEVEL TYPE | PARAMETERS) {
 
-Any constructor has to be static. But if you call $object->new( ) it will cause no error (if you attend this
-in you constructor).
+Any constructor is static. But if you call $object->new( ) it will cause no check-error.
 
-The return-value of any constructor has to be a blessed scalar which is a member of the actual class.
+The return-value of any constructor has to be a blessed reference which is a member of the actual class.
 
 =item Method signatures
 
@@ -316,7 +315,10 @@ The return-value of any constructor has to be a blessed scalar which is a member
 
 =item B<ACCESS_LEVEL>: ENUM
 
-Can be on of...
+Can be on of the following. If you overwrite methods, you can't change the access-level in the
+inheritation tree, because public methods start with no underscore and all other with an underscore.
+With this caveat and the fact, that there are no real private methods in perl it's more uncomplicated
+to do so.
 
 =over 4
 
@@ -463,7 +465,7 @@ This will croak at B<compiletime>
 
 =item scalar
 
-A scalar that doesn't contain any reference. The content doesn't matter. It can be undef.
+Anything what you can put into a scalar variable, i.e. references, strings, objects, undef, etc.
 
 =item scalarref
 
@@ -507,12 +509,21 @@ produced an overflow it will croak at B<runtime> like in int.
 B<But be aware!>
 
 If you use too many digits after the point like 1.000000000000001, perl will cut this down to "1"
-without any notice.
+without any notice if you use it as number direct in your code or if you calculate with it. If you
+give such a number to a method as string, Fukurama::Class would find fault with "overflow".
+
+=item class
+
+A string which contain a valid classname, i.e 'UNIVERSAL'. Can't be undef.
+
+=item object
+
+A scalar which can contain any object. 
 
 =item AnyClassname
 
 If there is no specific declaration for the datatype this would be interpreted as class. The parameter or return
-value must be a member of the defined class.
+value must be an OBJECT and a member of the defined class.
 
 =back
 
@@ -541,11 +552,6 @@ An array that contain only members of the MyClass-class.
 You can extend signatures by the following ways:
 
 =over 4
-
-=item limit the access-level
-
-You can't change the access-level to the subs (B<public>, B<protected>, B<private>) in your inheritation tree.
-Because public methods start with no underscore and all other with an underscore.
 
 =item set final
 

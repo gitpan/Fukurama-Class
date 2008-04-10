@@ -1,5 +1,5 @@
 package Fukurama::Class::DataTypes;
-use Fukurama::Class::Version(0.03);
+use Fukurama::Class::Version(0.04);
 use Fukurama::Class::Rigid;
 
 =head1 NAME
@@ -8,7 +8,7 @@ Fukurama::Class::DataTypes - Helper class to register and check datatypes
 
 =head1 VERSION
 
-Version 0.03 (beta)
+Version 0.04 (beta)
 
 =head1 SYNOPSIS
 
@@ -166,8 +166,7 @@ my $TYPES = {
 		(0, $_[0]);
 	},
 	scalar	=> sub {
-		return 1 if(!ref($_[0]));
-		(0, $_[0]);
+		1
 	},
 	scalarref	=> sub {
 		return 1 if(ref($_[0]) eq 'SCALAR');
@@ -224,10 +223,18 @@ my $TYPES = {
 		return 1 if(!ref($_[0]) && UNIVERSAL::isa($_[0], $_[0]));
 		(0, $_[0]);
 	},
+	object		=> sub {
+		return 1 if(ref($_[0]) && UNIVERSAL::isa($_[0], ref($_[0])));
+		(0, $_[0]);
+	},
 	'*class*'	=> sub {
 		return 1 if(ref($_[0]) && UNIVERSAL::isa($_[0], $_[1]));
 		(0, $_[0]);
 	},
+};
+my $CLASS_TYPES = {
+	class	=> 1,
+	object	=> 1,
 };
 # param: check_sub:CODE, value:SCALAR, type:STRING, pos:\INT, all_io:\ARRAY
 my $REFS = {
@@ -329,7 +336,7 @@ sub get_check_definition {
 		$type_sub = $TYPES->{'*class*'};
 		$is_class = 1;
 	}
-	$is_class = 1 if($type eq 'class' || $type =~ m/^[A-Z]/);
+	$is_class = 1 if($CLASS_TYPES->{$type} || $type =~ m/^[A-Z]/);
 	return {
 		is_class	=> $is_class,
 		check	=> $ref_sub,
@@ -343,7 +350,8 @@ sub check_parameter_definition {
 	my $check_def = $_[2];
 	
 	return 0 if(!$check_def->{'check'});
-
+	
+	return 1 if($CLASS_TYPES->{$param_type});
 	if($check_def->{'is_class'}) {
 		return UNIVERSAL::isa($param_type, $param_type);
 	}

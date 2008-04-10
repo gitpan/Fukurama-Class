@@ -19,7 +19,7 @@ use warnings;
 	package MySecond;
 	use Fukurama::Class::Attributes;
 	use base 'MyFirst';
-	sub new : Constructor(|string) {}
+	sub new : Constructor(static|string) {}
 }
 {
 	package MyThird;

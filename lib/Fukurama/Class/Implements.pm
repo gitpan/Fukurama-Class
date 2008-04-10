@@ -1,5 +1,5 @@
 package Fukurama::Class::Implements;
-use Fukurama::Class::Version(0.01);
+use Fukurama::Class::Version(0.02);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 use Fukurama::Class::Tree();
@@ -20,7 +20,7 @@ Fukurama::Class::Implements - Pragma to provide interfaces
 
 =head1 VERSION
 
-Version 0.01 (beta)
+Version 0.02 (beta)
 
 =head1 SYNOPSIS
 
@@ -273,6 +273,7 @@ sub _has_interface {
 	my $obj_class = $_[1];
 	my $interface_class = $_[2];
 	
+	return 0 if(!defined($obj_class));
 	my $interfaces = $REGISTER->{$obj_class};
 	return 0 if(!$interfaces || !exists($interfaces->{$interface_class}));
 	return 1;
@@ -296,7 +297,7 @@ sub _decorate_isa {
 		
 		return 1 if($class->_has_interface($obj_class, $type));
 		
-		&$old(@_);
+		goto &$old;
 	};
 	$ISA_ALREADY_DECORATED = 1;
 	return;

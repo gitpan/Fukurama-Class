@@ -1,5 +1,5 @@
 package Fukurama::Class::Attributes::OOStandard::DefinitionCheck;
-use Fukurama::Class::Version(0.02);
+use Fukurama::Class::Version(0.03);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp;
 use Fukurama::Class::DataTypes();
@@ -44,7 +44,7 @@ Fukurama::Class::Attributes::OOStandard::DefinitionCheck - Helper-class to check
 
 =head1 VERSION
 
-Version 0.02 (beta)
+Version 0.03 (beta)
 
 =head1 SYNOPSIS
 
@@ -104,6 +104,10 @@ Check the caller of a subroutine, to avoid directly called, abstract methods.
 
 Check the caller of a subroutine, to avoid unauthorized calls for e.g. private methods from outside the own class.
 
+=item try_check_call( id:STRING, class_parameter:SCALAR ) return:VOID
+
+Check the first argument of the method for static or nonstatic calls and the correct usage.
+
 =item check_inheritation( method_name:STRING, parent_class:CLASS, child_class:CLASS, inheritation_type:STRING ) return:VOID
 
 Check the inheritations of all defined declarations to avoid differend method signatures for parent and child.
@@ -133,7 +137,6 @@ sub get_translated_def {
 	
 	my $static = $class->_extract_static_def($sub_def);
 	$class->_try_check_static_def($sub_data, $static);
-	$static = 'static';
 	
 	my $type = $class->_extract_type_def($sub_def);
 	$class->_try_check_type_def($sub_data, $type);
@@ -316,7 +319,7 @@ sub _try_check_static_def {
 	my $class = $_[0];
 	my $sub_data = $_[1];
 	my $static = $_[2];
-
+	
 	$class->throw_def_error($sub_data, 'static declaration is wrong') if(!defined($static) || !$STATIC->{$static});
 	return;
 }
@@ -515,6 +518,7 @@ sub _try_check_io {
 				$entry =~ s/[^\]]*$//;
 			}
 			my $class = ($pdef->{'check'}->{'is_class'} ? ' class (or child of)' : '');
+			$class = 'Any kind of a' if($pdef->{'type'} eq 'class');
 			my $extended_msg = (defined($error_msg) ? " ($error_msg)" : '');
 			push(@$errors, "Error in $io_type " . ($i + 1) .
 				":\n	$def->{'sub_data'}->{'class'}->$def->{'sub_data'}->{'sub_name'}($def->{'sub_data'}->{'data'})\n" .
@@ -534,9 +538,10 @@ sub try_check_abstract {
 	_croak("Internal error:\n    sub $id() has no definition\n\n") if(!$def);
 	
 	if($def->{'type'} eq 'abstract') {
-		_croak("Error in access " .
-				":\n	$def->{'sub_data'}->{'class'}->$def->{'sub_data'}->{'sub_name'}($def->{'sub_data'}->{'data'})\n" .
-				"> This " . lcfirst($def->{'sub_data'}->{'attribute'}) . " is declared as abstract but called directly.\n\n");
+		$class->_throw_access_error(
+			$def,
+			'This ' . lcfirst($def->{'sub_data'}->{'attribute'}) . ' is declared as abstract but called directly.'
+		);
 	}
 	return;
 }
@@ -559,10 +564,11 @@ sub try_check_access {
 		return if($caller_package eq $def->{'sub_data'}->{'class'});
 		$msg = 'private but called from another class';
 	}
-	_croak("Error in access " .
-		":\n	$def->{'sub_data'}->{'class'}->$def->{'sub_data'}->{'sub_name'}($def->{'sub_data'}->{'data'})\n" .
-		"> This " . lcfirst($def->{'sub_data'}->{'attribute'}) . " is declared as $msg.\n" .
-		"> Called from class/package: '$caller_package'.\n\n");
+	$class->_throw_access_error(
+		$def,
+		'This ' . lcfirst($def->{'sub_data'}->{'attribute'}) . " is declared as $msg",
+		"Called from class/package: '$caller_package'"
+	);
 
 	return;	
 }
@@ -582,5 +588,47 @@ sub check_inheritation {
 	};
 	Fukurama::Class::Attributes::OOStandard::InheritationCheck->check_inheritation($method_name, $parent_class, $child_class, $inheritation_type, $definition_data);
 	return;
+}
+#STATIC void
+sub try_check_call {
+	my $class = $_[0];
+	my $id = $_[1];
+	my $class_param = $_[2];
+	
+	my $def = $REGISTER->{$id};
+	_croak("Internal error:\n    sub $id() has no definition\n\n") if(!$def);
+	
+	my $is_class = ref($class_param) || $class_param;
+	my $should_class = $def->{'sub_data'}->{'class'};
+	
+	if(!defined($is_class) || !defined($should_class)) {
+		$class->_throw_access_error($def, 'this subroutine was called directly, not over a class or an object');
+	} elsif(UNIVERSAL::isa($is_class, $should_class) || UNIVERSAL::isa($should_class, $is_class)) {
+		return if($def->{'static'} eq 'static');
+		
+		return if(ref($class_param));
+		$class->_throw_access_error(
+			$def,
+			'this non-static method was called as static method',
+			'only over a class, not an object',
+			'used class: ' . $class_param
+		);
+	} else {
+		$class->_throw_access_error(
+			$def,
+			'this method was called over the wrong class/object',
+			'it seems that you call it direct an pass a wrong, first parameter into it',
+			'1st parameter: ' . $class_param
+		);
+	}
+	return;	
+}
+# STATIC void
+sub _throw_access_error {
+	my ($class, $def, @msg) = @_;
+	
+	_croak("Error in access " .
+		":\n	$def->{'sub_data'}->{'class'}->$def->{'sub_data'}->{'sub_name'}($def->{'sub_data'}->{'data'})\n" .
+		" > " . join("\n > ", @msg) . "\n\n");
 }
 1;

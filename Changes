@@ -52,3 +52,15 @@ Revision history for Fukurama-Class
 		bugfix: parents can call protected methods from a child
 		change: now you cant tighten or loosen the access-level for a method in the inheritation tree (private, protected, public)
 		change all status to beta
+
+0.032	2008-04-10
+		bugfix: data-type class is now correct checked as type-definition
+		bugfix: static-declaration is now not automaticly set every time
+		bugfix: POD description for (not-)extending access-level improved
+		bugfix: check for static and oo-methodcalls correctly implemeted
+		change: data type scalar behaves like perl's standard scalar
+		bugfix: POD for datatype 'class' created
+		data type 'object' created
+		POD for data type decimal improved
+
+ 

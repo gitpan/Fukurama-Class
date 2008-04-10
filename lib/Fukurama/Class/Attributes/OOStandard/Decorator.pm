@@ -1,5 +1,5 @@
 package Fukurama::Class::Attributes::OOStandard::Decorator;
-use Fukurama::Class::Version(0.01);
+use Fukurama::Class::Version(0.02);
 use Fukurama::Class::Rigid;
 
 use Fukurama::Class::HideCaller;
@@ -11,7 +11,7 @@ Fukurama::Class::Attributes::OOStandard::Decorator - Helper-class to decorate su
 
 =head1 VERSION
 
-Version 0.01 (beta)
+Version 0.02 (beta)
 
 =head1 SYNOPSIS
 
@@ -61,6 +61,7 @@ sub decorate {
 	no warnings 'redefine';
 		
 	*{$identifier} = sub {
+		$helper->try_check_call($identifier, $_[0]);
 		$helper->try_check_access($identifier);
 		$helper->try_check_abstract($identifier);
 		$helper->try_check_parameter($identifier, [@_[1..$#_]]);

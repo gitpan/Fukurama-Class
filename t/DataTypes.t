@@ -1,5 +1,5 @@
 #!perl -T
-use Test::More tests => 329;
+use Test::More tests => 359;
 use strict;
 use warnings;
 
@@ -110,6 +110,7 @@ while($i++) {
 	}
 	last if($i > 1_000_000_000);
 }
+my $overfloat_length = $i;
 unlike($overfloating_float * 1, qr/1.2/, 'found floatingpoint overflow');
 unlike($overfloating_float_string * 1, qr/1\.?2/, 'found floatingpoint overflow string'); 
 
@@ -124,8 +125,8 @@ test_type('void', 0, undef, 'not void', 0, '');
 test_type('scalar', 1, undef, 'normal int', 0, 1);
 test_type('scalar', 1, undef, 'normal string', 0, '');
 test_type('scalar', 1, undef, 'normal undef', 0, undef);
-test_type('scalar', 0, undef, 'reference', 0, \undef);
-test_type('scalar', 0, undef, 'array reference', 0, []);
+test_type('scalar', 1, undef, 'reference', 0, \undef);
+test_type('scalar', 1, undef, 'array reference', 0, []);
 
 test_type('scalarref', 1, undef, 'normal', 0, \undef);
 test_type('scalarref', 0, undef, 'no ref', 0, '');
@@ -166,11 +167,17 @@ test_type('decimal', 0, 'NaN', 'string', 0, '1a1');
 test_type('decimal', 0, 'overflow', 'overflow', 0, $overfloating_float);
 test_type('decimal', 0, 'NaN', 'not a number', 0, '1..1111111111e99999');
 test_type('decimal', 0, undef, 'undef', 0, undef);
+test_type('decimal', 0, 'overflow', 'cutted int', 0, ('1.'. ('0' x $overfloat_length) . '5'));
 
 test_type('class', 1, undef, 'classname', 1, 'MyOwnClass');
 test_type('class', 0, undef, 'instance', 1, MyOwnClass->new());
 test_type('class', 0, undef, 'no classname', 1, 'MyNonexistingClass');
 test_type('class', 0, undef, 'undef', 1, undef);
+
+test_type('object', 0, undef, 'classname', 1, 'MyOwnClass');
+test_type('object', 1, undef, 'instance', 1, MyOwnClass->new());
+test_type('object', 0, undef, 'no classname', 1, 'MyNonexistingClass');
+test_type('object', 0, undef, 'undef', 1, undef);
 
 test_type('MyClass', 1, undef, 'instance', 1, MyClass->new());
 test_type('MyClass', 1, undef, 'child', 1, MyOwnClass->new());

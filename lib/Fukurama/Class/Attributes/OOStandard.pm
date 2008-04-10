@@ -1,5 +1,5 @@
 package Fukurama::Class::Attributes::OOStandard;
-use Fukurama::Class::Version(0.01);
+use Fukurama::Class::Version(0.02);
 use Fukurama::Class::Rigid;
 use Fukurama::Class::Carp();
 use Fukurama::Class::Attributes::OOStandard::DefinitionCheck();
@@ -26,7 +26,7 @@ Fukurama::Class::Attribute::OOStandard - Plugin for code attributes
 
 =head1 VERSION
 
-Version 0.01 (beta)
+Version 0.02 (beta)
 
 =head1 SYNOPSIS
 
@@ -120,6 +120,13 @@ sub Constructor {
 	
 	my $def = $DEF_CHECK->resolve_def($sub_data);
 	my $sub_def = $def->[0]->[0];
+	if(!grep({$_->{'data'} eq 'static'} @$sub_def)) {
+		push(@$sub_def, {
+			'type'	=> '',
+			'data'	=> 'static',
+		});
+	}
+	@$sub_def = grep({$_->{'data'} ne ''} @$sub_def);
 	my $para_def = $def->[1]->[0];
 	my $opt_para_def = $def->[1]->[1];
 	my $result_def = [{
@@ -152,7 +159,6 @@ sub Method {
 	my $opt_para_def = $def->[2]->[1];
 	
 	my $translated_def = $DEF_CHECK->get_translated_def($sub_data, $def, $sub_def, $result_def, $array_result_def, $para_def, $opt_para_def);
-	$translated_def->{'static'} = 'static';
 	$DEF_CHECK->try_check_translated_def($sub_data, $translated_def, $def);
 	$DEF_CHECK->decorate_sub($translated_def) if(!$DISABLE_RUNTIME_CHECK);
 	return 1;	

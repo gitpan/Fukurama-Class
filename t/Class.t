@@ -1,5 +1,5 @@
 #!perl -T
-use Test::More tests => 24;
+use Test::More tests => 32;
 use strict;
 use warnings;
 
@@ -54,12 +54,12 @@ like($@, qr/value.*MyInterface.*MySecondItf.*implements.*not allowed/i, 'croak a
 	main::is(UNIVERSAL::isa('MyInterface', 'MyVersion'), 1, 'implements works as single');
 	main::is(UNIVERSAL::isa('MyInterface', 'MyImplements'), 1, 'implements works as list');
 	main::is(MyInterface->isa('MyImplements'), 1, 'isa is overwritten');
-	sub new : Method(|int|) {}
+	sub new : Method(static|int|) {}
 }
 {
 	package MyAbstract;
 	use Fukurama::Class;
-	sub new : Method(|int|){}
+	sub new : Method(static|int|){}
 	eval("use Fukurama::Class( abstract => 1 );Fukurama::Class::Abstract->run_check()");
 	main::is($@, '', 'abstract works');
 	eval("MyAbstract->new()");
@@ -69,13 +69,13 @@ like($@, qr/value.*MyInterface.*MySecondItf.*implements.*not allowed/i, 'croak a
 	package MyAttributes;
 	use base 'MyAbstract';
 	no strict;
-	sub new : Method(|int|) { 1 }
+	sub new : Method(static|int|) { 1 }
 }
 is(MyAttributes->new(), 1, 'abstract method called by child');
 {
 	package MyFullUsage;
 	use Fukurama::Class( extends => 'MyAbstract', implements => 'MyImplements', version => 1.10, abstract => 1 );
-	sub new : Method(|int|) {}
+	sub new : Method(static|int|) {}
 }
 eval {
 	MyFullUsage->new();
@@ -84,7 +84,7 @@ like($@, qr/Abstract class/, 'calling abstract class');
 {
 	package MyChild;
 	use base 'MyFullUsage';
-	sub new : Method(|int|) {}
+	sub new : Method(static|int|) {}
 }
 
 {
@@ -144,5 +144,36 @@ like($@, qr/Abstract class/, 'calling abstract class');
 	}
 	main::like($@, qr/can't be another/, 'cant change from private to protected');
 }
-
+{
+	package MyOtherStatic;
+	use Fukurama::Class(extends => '');
+	sub new : Constructor(public|) {
+		bless({}, $_[0]);
+	}
+}
+{
+	package MyStatic;
+	use Fukurama::Class(extends => '');
+	sub new : Constructor(public|) {
+		bless({}, $_[0]);
+	}
+	sub static : Method(public static|boolean|) {
+		1
+	}
+	sub method : Method(public|boolean|) {
+		1
+	}
+	
+	my $o = __PACKAGE__->new();
+	main::is(eval { $o->static() }, 1, 'can call static method from object');
+	main::is(eval { __PACKAGE__->static() }, 1, 'can call static method from class');
+	main::is(eval{ static('MyOtherStatic') }, undef, "can't call static method with wrong class-param");
+	main::is(eval{ static() }, undef, "can't call static method with no class-param");
+	
+	main::is(eval { $o->method() }, 1, 'can call method from object');
+	main::is(eval{ __PACKAGE__->method() }, undef, "can't call method from class");
+	my $other_class = MyOtherStatic->new();
+	main::is(eval{ method($other_class) }, undef, "can't call method with wrong object-param");
+	main::is(eval{ method() }, undef, "can't call method with no object-param");
+}
 
